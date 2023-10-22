@@ -1,7 +1,7 @@
 ---
 title: backup_efi_partition
 author: a
-date: 2023-10-21
+date: 2023-10-18
 image: nyakori.png
 ---
 

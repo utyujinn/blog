@@ -1,7 +1,7 @@
 ---
 title: pacman
 author: a
-date: 2023-10-21
+date: 2023-10-20
 image: nyakori.png
 ---
 

@@ -14,7 +14,7 @@ type Post = {
 
 const PostCard  = ({ post }: { post: Post }) => {
   return (
-    <Link href={`/posts/${post.slug}`}>
+    <Link href={`/post/${post.slug}`}>
       <div className="border rounded-lg">
         <Image
           src={`/${post.data.image}`}

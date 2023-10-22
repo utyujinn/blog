@@ -13,5 +13,9 @@ export async function GET() {
     return {slug,data,content}
   });
   
+  const sortedPosts = posts.sort((postA, postB) =>
+    new Date(postA.data.date) > new Date(postB.data.date) ? -1 : 1
+  );
+
   return NextResponse.json( posts );
 };

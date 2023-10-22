@@ -1,7 +1,7 @@
 ---
 title: fingerprint
 author: a
-date: 2023-10-21
+date: 2023-10-19
 image: nyakori.png
 ---
 

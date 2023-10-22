@@ -1,7 +1,7 @@
 ---
 title: settings
 author: a
-date: 2023-10-21
+date: 2023-10-16
 image: nyakori.png
 ---
 

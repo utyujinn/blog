@@ -1,26 +1,34 @@
 ---
 title: installation
 author: a
-date: 2023-10-21
+date: 2023-10-15
 image: nyakori.png
 ---
 
 
 # make bootable device
 download arch iso, copy to usb by
-``` sudo fdisk ```
+```
+sudo fdisk // check device name
+```
 
-``` dd if=file.iso of=/dev/sda ```
+```
+dd if=file.iso of=/dev/sda
+```
 
 # boot from usb and install
 
 choose
+```
 > install arch linux
+```
 
-## verify boot mode
+## check boot mode
 
-To verify boot mode, check the UEFI by
-``` cat /sys/firmware/efi/fw_platform_size ```
+To check boot mode UEFI or BIOS by
+```
+cat /sys/firmware/efi/fw_platform_size
+```
 
 ## connect to internet
 
@@ -28,36 +36,52 @@ If you use usb tethering, nothing to do.
 
 ## partitioning
 
-# remove already existing partition
+## remove already existing partition
 
 To check device 
-``` fdisk -l```
+```
+fdisk -l
+```
 
 After find device
-``` fdisk /dev/nvme0n1```
+```
+fdisk /dev/nvme0n1
+```
 
 to check partitionnumber
-```p```
+```
+p
+```
 
 to remove 
-```d```
+```
+d
+```
 
 # add partition
 
 to create
-```n```
-```enter 2 times```
+```
+n
+```
+```
+enter x2
+```
 to assign size
-```+xG```
+```
++xG
+```
 
 repeat this step
 
 # assign partition type
 
 to start
-```t```
+```
+t
+```
 
-select type
+select type.
 
 for efi system, 1
 for linux swap, 19
@@ -66,70 +90,107 @@ for linux x86-64, 23
 # write partition
 
 to check,
-```p```
+```
+p
+```
 
 if all would be ok, 
-```w```
+```
+w
+```
 to write
 
 # format partition
 
 for root partition
-```mkfs.ext4 /dev/nvme0n1p6```
+```
+mkfs.ext4 /dev/nvme0n1p6
+```
 
 for swap partition
-```mkswap /dev/nvme0n1p5```
+```
+mkswap /dev/nvme0n1p5
+```
 
 for efi system partition
-``` mkfs.fat -F 32 /dev/nvme0n1p4```
+```
+mkfs.fat -F 32 /dev/nvme0n1p4
+```
 
 
 # mount device
 for root
-```mount /dev/nvme0n1p6 /mnt```
+```
+mount /dev/nvme0n1p6 /mnt
+```
 
 for efi
-```mount --mkdir /dev/nvme0n1p4 /mnt/boot```
+```
+mount --mkdir /dev/nvme0n1p4 /mnt/boot
+```
 
 for swap
-```swapon /dev/nvme0n1p5```
+```
+swapon /dev/nvme0n1p5
+```
 
 
 # install essential packages
-```pacstrap -K /mnt base linux linux-firmware```
-```pacstrap /mnt xf86-video-amdgpu amd-ucode```
+```
+pacstrap -K /mnt base linux linux-firmware
+pacstrap /mnt xf86-video-amdgpu amd-ucode
+```
 
 # chroot into target device
 
-```arch-chroot /mnt```
+```
+arch-chroot /mnt
+```
 
 to configure root pass
-```passwd```
+```
+passwd
+```
 
 to set hostname
-```cd etc```
-```touch hostname```
-```echo U > hostname```
+```
+cd etc
+touch hostname
+echo U > hostname
+```
 
 to add user
-``` pacman -S vim vi```
-```useradd -m -g wheel -G users utyujin```
-``` passwd utyujin```
+```
+pacman -S vim vi
+useradd -m -g wheel -G users utyujin```
+passwd utyujin
+```
 
-```visudo```
+```
+visudo
+```
 
 to enable network
 
-```pacman -S networkmanager network-manager-applet```
+```
+pacman -S networkmanager network-manager-applet
+```
 
-``` systemctl enable NetworkManager```
+```
+systemctl enable NetworkManager
+```
+
 # 
 after exit chroot,
 to install bootloader
-```bootctl --path=boot install```
+```
+bootctl --path=boot install
+```
 
-if returned error, go to boot
-```cd /boot```
+if returned error because of free space, go to boot
+```
+cd /boot
+```
 
 and remove not needed files.
 
@@ -137,50 +198,58 @@ and remove not needed files.
 # add loader entry
 
 make file in /boot/loader/entries/arch.conf
-``` title   Arch llinux```
+```
+title   Arch llinux
 linux   /vmlinux-linux
 initrd  /amd-uucode.img
 initrd  /initramfs-linux.img
-```options root=UUID=xxxx rw ```
+options root=UUID=xxxx rw
+```
 
 to write uuid, 
-``` blkid | grep nvme0n1p5 >> /boot/loader/entries/arch.conf```
-is effective
+```
+blkid | grep nvme0n1p5 >> /boot/loader/entries/arch.conf
+```
+is makes it easily.
 
 # install desktop environment
-
-```pacman -S xorg-server xorg-xinit```
-``` pacman -S lxde```
-choose lxde-common, lxpanel, lxsession, openbox
-4,13 -> blackout
-4,13,12,16->displayed cursor
-4,13,12,16,6,11->could start desktop
-4,13,6->blackout
-4,11,13->stared desktop but transparent cursor
-4,11,13,16->success!!
-
-2,4,6,8,9,11,13,16
+```
+pacman -S xorg-server xorg-xinit
+pacman -S lxde
+```
+choose lxde-common, lxpanel, lxsession, openbox(4,11,13,16)
 
 To start desktop,
-```startx /usr/bin/startlxde```
+```
+startx /usr/bin/startlxde
+```
 
-For most use
-Go home directory
-```touch .xinitrc```
+For efficiency, Go home directory and
+```
+touch .xinitrc
+```
+
 and write
-```exec startlxde```
+```
+exec startlxde
+```
 
 to enable touch touchpad as same movement as click left button,
 
 create
-```/etc/X11/xorg.conf.d/30-touchpad.conf  ```
+```
+/etc/X11/xorg.conf.d/30-touchpad.conf
+```
 and write
-``` Section "InputClass"  ``` 
-```  Identifier "touchpad"  ```
-```  Driver "libinput"  ```
-```  MatchIsTouchpad "on"  ```
-```  Option "Tapping" "on"  ```
-```EndSection```
-and finally
-
-``` reboot```
+```
+Section "InputClass" 
+Identifier "touchpad"
+Driver "libinput"
+MatchIsTouchpad "on"
+Option "Tapping" "on"
+EndSection
+```
+finally, restart your PC by 
+```
+reboot
+```

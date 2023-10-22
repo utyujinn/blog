@@ -1,7 +1,7 @@
 ---
 title: install_apps
 author: a
-date: 2023-10-21
+date: 2023-10-17
 image: nyakori.png
 ---
 
